@@ -1,0 +1,23 @@
+{
+    "name": "praatmetdedokter/pulse-redis-monitor",
+    "description": "Redis monitoring card for Laravel Pulse",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "laravel/pulse": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "PraatmetdeDokter\\Pulse\\RedisMonitor\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PraatmetdeDokter\\Pulse\\RedisMonitor\\RedisMonitorServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
