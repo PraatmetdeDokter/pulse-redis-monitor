@@ -16,8 +16,7 @@ return [
 
     'recorders' => [
         PraatmetdeDokter\Pulse\RedisMonitor\Recorders\RedisMonitor::class => [
-            'enabled' => env('PULSE_VALIDATION_ERRORS_ENABLED', true),
-            'sample_rate' => env('PULSE_VALIDATION_ERRORS_SAMPLE_RATE', 1)
+            'interval' => env('PULSE_REDIS_MONITOR_INTERVAL', 5) // Interval between monitoring events
         ],
 
         // ...
@@ -34,3 +33,6 @@ Next, add the card to your `resources/views/vendor/pulse/dashboard.blade.php`:
     <!-- ... -->
 </x-pulse>
 ```
+
+### Usage
+The recorder uses the [pulse:check](https://laravel.com/docs/11.x/pulse#capturing-entries) command, so make its running.
