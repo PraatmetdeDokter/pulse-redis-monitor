@@ -36,3 +36,6 @@ Next, add the card to your `resources/views/vendor/pulse/dashboard.blade.php`:
 
 ### Usage
 The recorder uses the [pulse:check](https://laravel.com/docs/11.x/pulse#capturing-entries) command, so make its running.
+
+# License
+The MIT Licence (MIT). Please see the [license file](LICENSE) for more information.
