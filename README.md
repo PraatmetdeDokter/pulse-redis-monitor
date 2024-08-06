@@ -17,7 +17,11 @@ return [
     'recorders' => [
         PraatmetdeDokter\Pulse\RedisMonitor\Recorders\RedisMonitorRecorder::class => [
             'connection' => env('PULSE_REDIS_MONITOR_CONNECTION', 'default'),
-            'interval' => env('PULSE_REDIS_MONITOR_INTERVAL', 5) // Interval in minutes between monitoring events
+            'interval' => env('PULSE_REDIS_MONITOR_INTERVAL', 5), // Interval in minutes between monitoring events
+            'colors' => [
+                'used_memory' => '#2ca3cc',
+                'max_memory' => '#ee3969'
+            ]
         ],
 
         // ...

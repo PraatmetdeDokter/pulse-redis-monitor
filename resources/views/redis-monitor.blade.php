@@ -24,6 +24,7 @@
                             class="h-14"
                             x-data="redisMonitorChart({
                                 connection: '{{ $connection }}',
+                                colors: @js($colors),
                                 data: @js($data)
                             })"
                         >
@@ -50,13 +51,13 @@ Alpine.data('redisMonitorChart', (config) => ({
                     datasets: [
                         {
                             label: 'Used memory',
-                            borderColor: '#ff0000',
+                            borderColor: config.colors['used_memory'],
                             data: config.data['used_memory'],
                             order: 0,
                         },
                         {
                             label: 'Max memory',
-                            borderColor: '#000000',
+                            borderColor: config.colors['max_memory'],
                             data: config.data['max_memory'],
                             order: 1,
                         },
@@ -97,6 +98,17 @@ Alpine.data('redisMonitorChart', (config) => ({
                         legend: {
                             display: false,
                         },
+                        tooltip: {
+                            mode: 'index',
+                            position: 'nearest',
+                            intersect: false,
+                            callbacks: {
+                                beforeBody: (context) => context
+                                    .map(item => `${item.dataset.label}: ${this.labelValue(item.formattedValue)}`)
+                                    .join(', '),
+                                label: () => null,
+                            },
+                        },
                     },
                 },
             }
@@ -125,6 +137,19 @@ Alpine.data('redisMonitorChart', (config) => ({
     },
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
+    },
+    labelValue(bytesString) {
+        bytes = parseFloat(bytesString.replace(/\./g, '').replace(',', '.'));
+        if (bytes === 0) {
+            return '0 Bytes'
+        }
+
+        const k = 1024
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        const value = parseFloat((bytes / Math.pow(k, i)).toFixed(2))
+
+        return `${value} ${sizes[i]}`
     }
 }))
 </script>
