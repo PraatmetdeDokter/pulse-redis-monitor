@@ -22,8 +22,8 @@ class RedisMonitor extends Card
     public function __construct()
     {
         $defaultColors = [
-            'used_memory' => '#10b981',
-            'max_memory' => '#9333ea',
+            'primary' => '#10b981',
+            'secondary' => '#9333ea',
         ];
 
         $this->colors = collect(config('pulse.recorders.'.RedisMonitorRecorder::class.'.colors', $defaultColors))->filter();

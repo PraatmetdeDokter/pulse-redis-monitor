@@ -100,13 +100,13 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
                     datasets: [
                         {
                             label: 'Used memory',
-                            borderColor: config.colors['used_memory'],
+                            borderColor: config.colors['secondary'],
                             data: config.data['used_memory'],
                             order: 0,
                         },
                         {
                             label: 'Max memory',
-                            borderColor: config.colors['max_memory'],
+                            borderColor: config.colors['primary'],
                             data: config.data['max_memory'],
                             order: 1,
                         },
@@ -213,13 +213,13 @@ Alpine.data('redisMonitorKeysChart', (config) => ({
                     datasets: [
                         {
                             label: 'Keys with exipration',
-                            borderColor: config.colors['used_memory'],
+                            borderColor: config.colors['secondary'],
                             data: config.data['keys_with_expiration'],
                             order: 0,
                         },
                         {
                             label: 'Total keys',
-                            borderColor: config.colors['max_memory'],
+                            borderColor: config.colors['primary'],
                             data: config.data['keys_total'],
                             order: 1,
                         },
@@ -313,7 +313,7 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
                     datasets: [
                         {
                             label: 'Average ttl',
-                            borderColor: config.colors['used_memory'],
+                            borderColor: config.colors['secondary'],
                             data: config.data['avg_ttl'],
                             order: 0,
                         }

@@ -19,8 +19,8 @@ return [
             'connections' => env('PULSE_REDIS_MONITOR_CONNECTIONS', ['default']),
             'interval' => env('PULSE_REDIS_MONITOR_INTERVAL', 5), // Interval in minutes between monitoring events
             'colors' => [
-                'used_memory' => '#2ca3cc',
-                'max_memory' => '#ee3969'
+                'primary' => '#ee3969',
+                'secondary' => '#2ca3cc'
             ]
         ],
 
