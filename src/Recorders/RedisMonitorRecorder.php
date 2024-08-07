@@ -54,6 +54,7 @@ class RedisMonitorRecorder
             $output = Redis::connection($connection)->command('INFO');
 
             $this->recordMemoryUsage($connection, $output);
+            $this->recordKeyUsage($connection, $output);
         }
     }
 
@@ -61,6 +62,32 @@ class RedisMonitorRecorder
     {
         $this->pulse->record('used_memory', $connection, $output['used_memory'])->avg()->onlyBuckets();
         $this->pulse->record('max_memory', $connection, $output['maxmemory'])->avg()->onlyBuckets();
+    }
+
+    protected function recordKeyUsage(string $connection, array $output): void
+    {
+        $db0Stats = explode(',', $output['db0']);
+
+        $parsedStats = [];
+
+        foreach ($db0Stats as $stat) {
+            [$key, $value] = explode('=', $stat);
+            if ($key && $value !== NULL) {
+                $parsedStats[$key] = $value;
+            }
+        }
+
+        if (isset($parsedStats['keys'])) {
+            $this->pulse->record('keys_total', $connection, $parsedStats['keys'])->avg()->onlyBuckets();
+        }
+
+        if (isset($parsedStats['expires'])) {
+            $this->pulse->record('keys_with_expiration', $connection, $parsedStats['expires'])->avg()->onlyBuckets();
+        }
+
+        if (isset($parsedStats['avg_ttl'])) {
+            $this->pulse->record('avg_ttl', $connection, $parsedStats['avg_ttl'])->avg()->onlyBuckets();
+        }
     }
 
     /**
