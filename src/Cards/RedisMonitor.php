@@ -4,6 +4,7 @@ namespace PraatmetdeDokter\Pulse\RedisMonitor\Cards;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Laravel\Pulse\Facades\Pulse;
@@ -26,7 +27,7 @@ class RedisMonitor extends Card
             'secondary' => '#9333ea',
         ];
 
-        $this->colors = collect(config('pulse.recorders.'.RedisMonitorRecorder::class.'.colors', $defaultColors))->filter();
+        $this->colors = collect(Config::get('pulse.recorders.'.RedisMonitorRecorder::class.'.colors', $defaultColors))->filter();
     }
 
     public function render(): Renderable
