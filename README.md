@@ -6,7 +6,7 @@ A Laravel Pulse card for monitoring Redis keys, expiration times, and storage us
 First, install the package via composer:
 
 ```sh
-composer require PraatmetdeDokter/pulse-redis-monitor
+composer require praatmetdedokter/pulse-redis-monitor
 ```
 
 next, add the recorder to your `config/pulse.php`
