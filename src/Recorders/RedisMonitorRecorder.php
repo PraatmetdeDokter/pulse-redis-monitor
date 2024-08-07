@@ -54,6 +54,9 @@ class RedisMonitorRecorder
         $this->monitorKeyUsage();
     }
 
+    /**
+     * Monitors the memory usage of all Redis connections.
+     */
     protected function monitorMemoryUsage(): void
     {
         foreach ($this->connections as $connection) {
@@ -63,6 +66,9 @@ class RedisMonitorRecorder
         }
     }
 
+    /**
+     * Records the memory usage data for a specific Redis connection.
+     */
     protected function recordMemoryUsage(string $connection, array $output): void
     {
         if (isset($output['used_memory']) && isset($output['maxmemory'])) {
@@ -71,6 +77,9 @@ class RedisMonitorRecorder
         }
     }
 
+    /**
+     * Monitors the key usage of all Redis connections.
+     */
     protected function monitorKeyUsage(): void
     {
         foreach ($this->connections as $connection) {
@@ -80,6 +89,9 @@ class RedisMonitorRecorder
         }
     }
 
+    /**
+     * Records the key usage data for all dbs for a specific connection.
+     */
     protected function recordKeyUsage(string $connection, array $output): void
     {
         // Loop through each database in the output array
@@ -123,7 +135,7 @@ class RedisMonitorRecorder
     }
 
     /**
-     * Sets the redis connection instance
+     * Sets the redis connection instance.
      */
     protected function setRedisConnection(): void
     {
