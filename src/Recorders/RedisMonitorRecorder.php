@@ -54,6 +54,7 @@ class RedisMonitorRecorder
         $this->monitorMemoryUsage();
         $this->monitorKeyUsage();
         $this->monitorKeyStats();
+        $this->monitorNetworkUsage();
     }
 
     /**
@@ -163,10 +164,10 @@ class RedisMonitorRecorder
             return;
         }
 
-        $prev_expired_keys = (int) Cache::get('total_expired_keys_' . $connection, 0);
-        $prev_evicted_keys = (int) Cache::get('total_evicted_keys_' . $connection, 0);
+        $prev_expired_keys = (int) Cache::get('total_expired_keys_' . $connection);
+        $prev_evicted_keys = (int) Cache::get('total_evicted_keys_' . $connection);
 
-        if ($prev_expired_keys !== 0 && $prev_evicted_keys !== 0) {
+        if (!is_null($prev_expired_keys) && !is_null($prev_evicted_keys)) {
             $diff_expired = $output['expired_keys'] - $prev_expired_keys;
             $diff_evicted = $output['evicted_keys'] - $prev_evicted_keys;
 
