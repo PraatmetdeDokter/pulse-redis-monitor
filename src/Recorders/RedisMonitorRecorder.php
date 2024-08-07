@@ -3,6 +3,7 @@
 namespace PraatmetdeDokter\Pulse\RedisMonitor\Recorders;
 
 use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Laravel\Pulse\Events\SharedBeat;
 use Laravel\Pulse\Pulse;
@@ -52,10 +53,11 @@ class RedisMonitorRecorder
 
         $this->monitorMemoryUsage();
         $this->monitorKeyUsage();
+        $this->monitorKeyStats();
     }
 
     /**
-     * Monitors the memory usage of all Redis connections.
+     * Monitors the memory usage of all configured Redis connections.
      */
     protected function monitorMemoryUsage(): void
     {
@@ -67,18 +69,7 @@ class RedisMonitorRecorder
     }
 
     /**
-     * Records the memory usage data for a specific Redis connection.
-     */
-    protected function recordMemoryUsage(string $connection, array $output): void
-    {
-        if (isset($output['used_memory']) && isset($output['maxmemory'])) {
-            $this->pulse->record('used_memory', $connection, $output['used_memory'])->avg()->onlyBuckets();
-            $this->pulse->record('max_memory', $connection, $output['maxmemory'])->avg()->onlyBuckets();
-        }
-    }
-
-    /**
-     * Monitors the key usage of all Redis connections.
+     * Monitors the key usage of all configured Redis connections.
      */
     protected function monitorKeyUsage(): void
     {
@@ -87,6 +78,43 @@ class RedisMonitorRecorder
 
             $this->recordKeyUsage($connection, $output);
         }
+    }
+
+    /**
+     * Monitors the key stats of all configured Redis connections.
+     */
+    protected function monitorKeyStats(): void
+    {
+        foreach ($this->connections as $connection) {
+            $output = Redis::connection($connection)->command('INFO', ['stats']);
+
+            $this->recordKeyStats($connection, $output);
+        }
+    }
+
+    /**
+     * Monitors network usage of all configured Redis connections.
+     */
+    protected function monitorNetworkUsage(): void
+    {
+        foreach ($this->connections as $connection) {
+            $output = Redis::connection($connection)->command('INFO', ['stats']);
+
+            $this->recordNetworkUsage($connection, $output);
+        }
+    }
+
+    /**
+     * Records the memory usage data for a specific Redis connection.
+     */
+    protected function recordMemoryUsage(string $connection, array $output): void
+    {
+        if (!isset($output['used_memory'], $output['maxmemory'])) {
+            return;
+        }
+
+        $this->pulse->record('used_memory', $connection, $output['used_memory'])->avg()->onlyBuckets();
+        $this->pulse->record('max_memory', $connection, $output['maxmemory'])->avg()->onlyBuckets();
     }
 
     /**
@@ -124,6 +152,55 @@ class RedisMonitorRecorder
                 $this->pulse->record('avg_ttl', $key, $parsedStats['avg_ttl'])->avg()->onlyBuckets();
             }
         }
+    }
+
+    /**
+     * Records the expired and evicted key counts for a specific Redis connection.
+     */
+    protected function recordKeyStats(string $connection, array $output): void
+    {
+        if (!isset($output['expired_keys'], $output['evicted_keys'])) {
+            return;
+        }
+
+        $prev_expired_keys = (int) Cache::get('total_expired_keys_' . $connection, 0);
+        $prev_evicted_keys = (int) Cache::get('total_evicted_keys_' . $connection, 0);
+
+        if ($prev_expired_keys !== 0 && $prev_evicted_keys !== 0) {
+            $diff_expired = $output['expired_keys'] - $prev_expired_keys;
+            $diff_evicted = $output['evicted_keys'] - $prev_evicted_keys;
+
+            $this->pulse->record('expired_keys', $connection, $diff_expired)->avg()->onlyBuckets();
+            $this->pulse->record('evicted_keys', $connection, $diff_evicted)->avg()->onlyBuckets();
+        }
+
+        Cache::put('total_expired_keys_' . $connection, $output['expired_keys']);
+        Cache::put('total_evicted_keys_' . $connection, $output['evicted_keys']);
+    }
+
+    /**
+     * Records the network usage since $this->interval for a specific Redis connection.
+     */
+    public function recordNetworkUsage(string $connection, array $output): void
+    {
+        if (!isset($output['total_net_input_bytes'], $output['total_net_output_bytes'])) {
+            return;
+        }
+
+        $prev_expired_keys = (int) Cache::get('total_net_input_bytes_' . $connection, 0);
+        $prev_evicted_keys = (int) Cache::get('total_net_output_bytes_' . $connection, 0);
+
+        if ($prev_expired_keys !== 0 && $prev_evicted_keys !== 0) {
+            $diff_output = $output['total_net_input_bytes'] - $prev_expired_keys;
+            $diff_input = $output['total_net_output_bytes'] - $prev_evicted_keys;
+
+            $diff = $diff_output + $diff_input;
+
+            $this->pulse->record('redis_network_usage', $connection, $diff)->avg()->onlyBuckets();
+        }
+
+        Cache::put('total_net_input_bytes_' . $connection, $output['total_net_input_bytes']);
+        Cache::put('total_net_output_bytes_' . $connection, $output['total_net_output_bytes']);
     }
 
     /**
