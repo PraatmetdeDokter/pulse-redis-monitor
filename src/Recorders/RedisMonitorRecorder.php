@@ -30,9 +30,10 @@ class RedisMonitorRecorder
     protected int $interval;
 
     /**
-     * Redis connection name
+     * Array of redis connection names to record
      */
-    protected string $redis;
+    protected array $connections;
+
 
     public function __construct(Pulse $pulse, Repository $config)
     {
@@ -49,15 +50,17 @@ class RedisMonitorRecorder
             return;
         }
 
-        $this->recordMemoryUsage();
+        foreach ($this->connections as $connection) {
+            $output = Redis::connection($connection)->command('INFO');
+
+            $this->recordMemoryUsage($connection, $output);
+        }
     }
 
-    protected function recordMemoryUsage(): void
+    protected function recordMemoryUsage(string $connection, array $output): void
     {
-        $output = Redis::connection($this->connection)->command('INFO');
-
-        $this->pulse->record('used_memory', $this->connection, $output['used_memory'])->avg()->onlyBuckets();
-        $this->pulse->record('max_memory', $this->connection, $output['maxmemory'])->avg()->onlyBuckets();
+        $this->pulse->record('used_memory', $connection, $output['used_memory'])->avg()->onlyBuckets();
+        $this->pulse->record('max_memory', $connection, $output['maxmemory'])->avg()->onlyBuckets();
     }
 
     /**
@@ -73,6 +76,6 @@ class RedisMonitorRecorder
      */
     protected function setRedisConnection(): void
     {
-        $this->connection = $this->config->get('pulse.recorders.'.static::class.'.connection', 'default');
+        $this->connections = $this->config->get('pulse.recorders.'.static::class.'.connections', ['default']);
     }
 }
