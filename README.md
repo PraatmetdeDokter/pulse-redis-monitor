@@ -1,5 +1,27 @@
 # Redis monitoring card for Laravel Pulse
-A Laravel Pulse card for monitoring Redis keys, expiration times, and storage usage.
+A customizable Laravel Pulse card for monitoring key Redis metrics.
+
+## Features
+
+This card monitors and displays the following Redis metrics:
+
+- **Memory usage:**
+  - **Used memory:** The current amount of memory being utilized by Redis.
+  - **Max memory:** The maximum memory available to Redis.
+
+- **Key statistics:**
+  - **Total keys:** The total number of keys currently stored in Redis.
+  - **Keys with expiration:** A count of keys that have a set expiration time.
+
+- **Removed keys:**
+  - **Expired jeys:** The number of keys that have been automatically removed after their TTL has expired.
+  - **Evicted jeys:** The number of keys evicted due to memory constraints when Redis is running out of space.
+
+- **Average TTL:** The average remaining Time to Live (TTL) of keys in Redis.
+
+- **Network usage:**
+  - **Total Traffic:** The sum of data received and sent by Redis (Traffic In + Traffic Out).
+
 
 ## Installation
 
