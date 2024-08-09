@@ -16,7 +16,7 @@
                     })"
                 >
 
-                <canvas x-ref="canvas" class="ring-1 ring-gray-900/5 dark:ring-gray-100/10 bg-gray-50 dark:bg-gray-800 rounded-md shadow-sm"></canvas>
+                <canvas x-ref="memoryCanvas" class="ring-1 ring-gray-900/5 dark:ring-gray-100/10 bg-gray-50 dark:bg-gray-800 rounded-md shadow-sm"></canvas>
             </div>
         </div>
     @endforeach
@@ -27,7 +27,7 @@
 Alpine.data('redisMonitorMemoryChart', (config) => ({
     init() {
         let chart = new Chart(
-            this.$refs.canvas,
+            this.$refs.memoryCanvas,
             {
                 type: 'line',
                 data: {

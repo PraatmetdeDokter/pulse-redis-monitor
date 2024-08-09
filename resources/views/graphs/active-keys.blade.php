@@ -1,4 +1,4 @@
-<div class="grid gap-3 mx-px mb-px" wire:poll.60s>
+<div class="grid gap-3 mx-px mb-px" wire:poll.5s>
     <h3 class="font-bold text-gray-700 dark:text-gray-300">Active keys</h3>
     @foreach ($items as $connection => $data)
         <div wire:key="keys-connection-{{ $connection }}">
@@ -16,7 +16,7 @@
                     })"
                 >
 
-                <canvas x-ref="canvas" class="ring-1 ring-gray-900/5 dark:ring-gray-100/10 bg-gray-50 dark:bg-gray-800 rounded-md shadow-sm"></canvas>
+                <canvas x-ref="activeKeysCanvas" class="ring-1 ring-gray-900/5 dark:ring-gray-100/10 bg-gray-50 dark:bg-gray-800 rounded-md shadow-sm"></canvas>
             </div>
         </div>
     @endforeach
@@ -27,7 +27,7 @@
 Alpine.data('redisMonitorActiveKeysChart', (config) => ({
     init() {
         let chart = new Chart(
-            this.$refs.canvas,
+            this.$refs.activeKeysCanvas,
             {
                 type: 'line',
                 data: {
