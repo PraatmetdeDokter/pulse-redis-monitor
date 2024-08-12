@@ -14,7 +14,7 @@
         @else
 
         {{-- Start of memory graph --}}
-        <div class="grid gap-3 mx-px mb-px" wire:poll.5s>
+        <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Memory</h3>
             @foreach ($memory as $connection => $data)
                 <div wire:key="memory-connection-{{ $connection }}">
@@ -39,7 +39,7 @@
         </div>
 
         {{-- Start of active keys graph --}}
-        <div class="grid gap-3 mx-px mb-px" wire:poll.5s>
+        <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Active keys</h3>
             @foreach ($active_keys as $connection => $data)
                 <div wire:key="keys-connection-{{ $connection }}">
@@ -64,7 +64,7 @@
         </div>
 
         {{-- Start of removed keys graph --}}
-        <div class="grid gap-3 mx-px mb-px" wire:poll.5s>
+        <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Removed keys</h3>
             @foreach ($removed_keys as $connection => $data)
                 <div wire:key="keys-connection-{{ $connection }}">
@@ -89,7 +89,7 @@
         </div>
 
         {{-- Start of TTL graph --}}
-        <div class="grid gap-3 mx-px mb-px" wire:poll.5s>
+        <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">TTL</h3>
             @foreach ($ttl as $connection => $data)
                 <div wire:key="keys-connection-{{ $connection }}">
@@ -114,7 +114,7 @@
         </div>
 
         {{-- Start of network graph --}}
-        <div class="grid gap-3 mx-px mb-px" wire:poll.5s>
+        <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Network usage</h3>
             @foreach ($network as $connection => $data)
                 <div wire:key="keys-connection-{{ $connection }}">
