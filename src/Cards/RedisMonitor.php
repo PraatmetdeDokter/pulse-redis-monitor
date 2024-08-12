@@ -5,7 +5,6 @@ namespace PraatmetdeDokter\Pulse\RedisMonitor\Cards;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Laravel\Pulse\Facades\Pulse;
@@ -37,7 +36,7 @@ class RedisMonitor extends Card
             'memory_usage' => true,
             'key_statistics' => true,
             'removed_keys' => true,
-            'network_usage' => true
+            'network_usage' => true,
         ];
 
         $this->colors = collect($defaultColors)->merge(Config::get('pulse.recorders.'.RedisMonitorRecorder::class.'.colors', []));
@@ -78,7 +77,7 @@ class RedisMonitor extends Card
             'ttl' => $ttl,
             'network' => $network,
             'colors' => $this->colors,
-            'metrics' => $this->metrics
+            'metrics' => $this->metrics,
         ]);
     }
 }
