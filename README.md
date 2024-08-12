@@ -70,5 +70,12 @@ Next, add the card to your `resources/views/vendor/pulse/dashboard.blade.php`:
 ### Usage
 The recorder uses the [pulse:check](https://laravel.com/docs/11.x/pulse#capturing-entries) command, so make that the command running.
 
+# Configuration
+To customize the behavior of the Redis Monitor Recorder, you can optionally include `colors` and `metrics` settings in your configuration. You only need to specify the values you want to change from the default settings.
+
+## Configruation options
+- `colors`: Define custom colors for the charts.
+- `metrics`: Disable specific metrics.
+
 # License
 The MIT Licence (MIT). Please see the [license file](LICENSE) for more information.
