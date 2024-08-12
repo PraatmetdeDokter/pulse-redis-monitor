@@ -36,9 +36,9 @@ class RedisMonitorRecorder
     protected array $connections;
 
     /**
-     * Array containing boolean values storing whether a feature is enabled
+     * Array containing boolean values storing whether a metric is enabled
      */
-    protected array $features;
+    protected array $metrics;
 
     public function __construct(Pulse $pulse, Repository $config)
     {
@@ -47,6 +47,7 @@ class RedisMonitorRecorder
 
         $this->setInterval();
         $this->setRedisConnection();
+        $this->setMetrics();
     }
 
     public function record(SharedBeat $event): void
@@ -55,19 +56,19 @@ class RedisMonitorRecorder
             return;
         }
 
-        if ($this->features['memory_usage']) {
+        if ($this->metrics['memory_usage']) {
             $this->monitorMemoryUsage();
         }
 
-        if ($this->features['key_statistics']) {
+        if ($this->metrics['key_statistics']) {
             $this->monitorKeyUsage();
         }
 
-        if ($this->features['removed_keys']) {
+        if ($this->metrics['removed_keys']) {
             $this->monitorKeyStats();
         }
 
-        if ($this->features['network_usage']) {
+        if ($this->metrics['network_usage']) {
             $this->monitorNetworkUsage();
         }
     }
@@ -220,15 +221,15 @@ class RedisMonitorRecorder
     }
 
     /**
-     * Set the enabled features based on the configuration.
+     * Set the enabled metrics based on the configuration.
      */
-    protected function setEnabledFeatures(): void
+    protected function setMetrics(): void
     {
-        $this->features = [
-            'memory_usage' => $this->config->get('redis_metrics.memory_usage', true),
-            'key_statistics' => $this->config->get('redis_metrics.key_statistics', true), // Includes TTL
-            'removed_keys' => $this->config->get('redis_metrics.removed_keys', true),
-            'network_usage' => $this->config->get('redis_metrics.network_usage', true),
+        $this->metrics = [
+            'memory_usage' => $this->config->get('pulse.recorders.'.static::class.'.metrics.memory_usage', true),
+            'key_statistics' => $this->config->get('pulse.recorders.'.static::class.'.metrics.key_statistics', true), // Includes TTL
+            'removed_keys' => $this->config->get('pulse.recorders.'.static::class.'.metrics.removed_keys', true),
+            'network_usage' => $this->config->get('pulse.recorders.'.static::class.'.metrics.network_usage', true),
         ];
     }
 

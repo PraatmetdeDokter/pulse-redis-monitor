@@ -14,6 +14,7 @@
         @else
 
         {{-- Start of memory graph --}}
+        @if ($metrics['memory_usage'])
         <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Memory</h3>
             @foreach ($memory as $connection => $data)
@@ -37,8 +38,10 @@
                 </div>
             @endforeach
         </div>
+        @endif
 
         {{-- Start of active keys graph --}}
+        @if ($metrics['key_statistics'])
         <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Active keys</h3>
             @foreach ($active_keys as $connection => $data)
@@ -62,8 +65,10 @@
                 </div>
             @endforeach
         </div>
+        @endif
 
         {{-- Start of removed keys graph --}}
+        @if ($metrics['removed_keys'])
         <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Removed keys</h3>
             @foreach ($removed_keys as $connection => $data)
@@ -87,8 +92,10 @@
                 </div>
             @endforeach
         </div>
+        @endif
 
         {{-- Start of TTL graph --}}
+        @if ($metrics['key_statistics'])
         <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">TTL</h3>
             @foreach ($ttl as $connection => $data)
@@ -112,8 +119,10 @@
                 </div>
             @endforeach
         </div>
+        @endif
 
         {{-- Start of network graph --}}
+        @if ($metrics['network_usage'])
         <div class="grid gap-3 mx-px mb-px" wire:poll.60s>
             <h3 class="font-bold text-gray-700 dark:text-gray-300">Network usage</h3>
             @foreach ($network as $connection => $data)
@@ -137,6 +146,7 @@
                 </div>
             @endforeach
         </div>
+        @endif
         @endif
     </x-pulse::scroll>
 </x-pulse::card>
