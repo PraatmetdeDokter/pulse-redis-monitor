@@ -43,6 +43,12 @@ return [
             'colors' => [
                 'primary' => '#ee3969',
                 'secondary' => '#2ca3cc'
+            ],
+            'metrics' => [
+                'memory_usage' => env('PULSE_REDIS_MONITOR_MEMORY_USAGE', true),
+                'key_statistics' => env('PULSE_REDIS_MONITOR_KEY_STATISTICS', true),
+                'removed_keys' => env('PULSE_REDIS_MONITOR_REMOVED_KEYS', true),
+                'network_usage' => env('PULSE_REDIS_MONITOR_NETWORK_USAGE', true),
             ]
         ],
 

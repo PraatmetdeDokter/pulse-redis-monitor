@@ -35,6 +35,11 @@ class RedisMonitorRecorder
      */
     protected array $connections;
 
+    /**
+     * Array containing boolean values storing whether a feature is enabled
+     */
+    protected array $features;
+
 
     public function __construct(Pulse $pulse, Repository $config)
     {
@@ -51,10 +56,21 @@ class RedisMonitorRecorder
             return;
         }
 
-        $this->monitorMemoryUsage();
-        $this->monitorKeyUsage();
-        $this->monitorKeyStats();
-        $this->monitorNetworkUsage();
+        if ($this->features['memory_usage']) {
+            $this->monitorMemoryUsage();
+        }
+
+        if ($this->features['key_statistics']) {
+            $this->monitorKeyUsage();
+        }
+
+        if ($this->features['removed_keys']) {
+            $this->monitorKeyStats();
+        }
+
+        if ($this->features['network_usage']) {
+            $this->monitorNetworkUsage();
+        }
     }
 
     /**
@@ -202,6 +218,19 @@ class RedisMonitorRecorder
 
         Cache::put('total_net_input_bytes_' . $connection, $output['total_net_input_bytes']);
         Cache::put('total_net_output_bytes_' . $connection, $output['total_net_output_bytes']);
+    }
+
+    /**
+     * Set the enabled features based on the configuration.
+     */
+    protected function setEnabledFeatures(): void
+    {
+        $this->features = [
+            'memory_usage'   => $this->config->get('redis_metrics.memory_usage', true),
+            'key_statistics' => $this->config->get('redis_metrics.key_statistics', true), // Includes TTL
+            'removed_keys'   => $this->config->get('redis_metrics.removed_keys', true),
+            'network_usage'  => $this->config->get('redis_metrics.network_usage', true),
+        ];
     }
 
     /**
