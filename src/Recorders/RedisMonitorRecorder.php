@@ -52,7 +52,7 @@ class RedisMonitorRecorder
 
     public function record(SharedBeat $event): void
     {
-        if ($event->time->minute % $this->interval !== 0 && $event->time->second === 0) {
+        if ($event->time->minute % $this->interval !== 0 || $event->time->second !== 0) {
             return;
         }
 
