@@ -39,13 +39,13 @@ class RedisMonitor extends Card
             'expired_keys',
             'evicted_keys',
             'avg_ttl',
-            'redis_network_usage'
+            'redis_network_usage',
         ], 'avg', $this->periodAsInterval());
 
         return View::make('redis-monitor::redis-monitor', [
             'empty' => $data->isEmpty(),
             'period' => $this->period,
-            'colors' => $this->colors
+            'colors' => $this->colors,
         ]);
     }
 }

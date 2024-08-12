@@ -40,7 +40,6 @@ class RedisMonitorRecorder
      */
     protected array $features;
 
-
     public function __construct(Pulse $pulse, Repository $config)
     {
         $this->pulse = $pulse;
@@ -126,7 +125,7 @@ class RedisMonitorRecorder
      */
     protected function recordMemoryUsage(string $connection, array $output): void
     {
-        if (!isset($output['used_memory'], $output['maxmemory'])) {
+        if (! isset($output['used_memory'], $output['maxmemory'])) {
             return;
         }
 
@@ -153,12 +152,12 @@ class RedisMonitorRecorder
             foreach ($dbStats as $stat) {
                 [$key, $value] = explode('=', $stat);
 
-                if ($key && $value !== NULL) {
+                if ($key && $value !== null) {
                     $parsedStats[$key] = $value;
                 }
             }
 
-            $key = $connection . '_' . $dbKey;
+            $key = $connection.'_'.$dbKey;
 
             if (isset($parsedStats['keys']) && isset($parsedStats['expires'])) {
                 $this->pulse->record('keys_total', $key, $parsedStats['keys'])->avg()->onlyBuckets();
@@ -176,14 +175,14 @@ class RedisMonitorRecorder
      */
     protected function recordKeyStats(string $connection, array $output): void
     {
-        if (!isset($output['expired_keys'], $output['evicted_keys'])) {
+        if (! isset($output['expired_keys'], $output['evicted_keys'])) {
             return;
         }
 
-        $prev_expired_keys = (int) Cache::get('total_expired_keys_' . $connection);
-        $prev_evicted_keys = (int) Cache::get('total_evicted_keys_' . $connection);
+        $prev_expired_keys = (int) Cache::get('total_expired_keys_'.$connection);
+        $prev_evicted_keys = (int) Cache::get('total_evicted_keys_'.$connection);
 
-        if (!is_null($prev_expired_keys) && !is_null($prev_evicted_keys)) {
+        if (! is_null($prev_expired_keys) && ! is_null($prev_evicted_keys)) {
             $diff_expired = $output['expired_keys'] - $prev_expired_keys;
             $diff_evicted = $output['evicted_keys'] - $prev_evicted_keys;
 
@@ -191,8 +190,8 @@ class RedisMonitorRecorder
             $this->pulse->record('evicted_keys', $connection, $diff_evicted)->avg()->onlyBuckets();
         }
 
-        Cache::put('total_expired_keys_' . $connection, $output['expired_keys']);
-        Cache::put('total_evicted_keys_' . $connection, $output['evicted_keys']);
+        Cache::put('total_expired_keys_'.$connection, $output['expired_keys']);
+        Cache::put('total_evicted_keys_'.$connection, $output['evicted_keys']);
     }
 
     /**
@@ -200,12 +199,12 @@ class RedisMonitorRecorder
      */
     public function recordNetworkUsage(string $connection, array $output): void
     {
-        if (!isset($output['total_net_input_bytes'], $output['total_net_output_bytes'])) {
+        if (! isset($output['total_net_input_bytes'], $output['total_net_output_bytes'])) {
             return;
         }
 
-        $prev_expired_keys = (int) Cache::get('total_net_input_bytes_' . $connection, 0);
-        $prev_evicted_keys = (int) Cache::get('total_net_output_bytes_' . $connection, 0);
+        $prev_expired_keys = (int) Cache::get('total_net_input_bytes_'.$connection, 0);
+        $prev_evicted_keys = (int) Cache::get('total_net_output_bytes_'.$connection, 0);
 
         if ($prev_expired_keys !== 0 && $prev_evicted_keys !== 0) {
             $diff_output = $output['total_net_input_bytes'] - $prev_expired_keys;
@@ -216,8 +215,8 @@ class RedisMonitorRecorder
             $this->pulse->record('redis_network_usage', $connection, $diff)->avg()->onlyBuckets();
         }
 
-        Cache::put('total_net_input_bytes_' . $connection, $output['total_net_input_bytes']);
-        Cache::put('total_net_output_bytes_' . $connection, $output['total_net_output_bytes']);
+        Cache::put('total_net_input_bytes_'.$connection, $output['total_net_input_bytes']);
+        Cache::put('total_net_output_bytes_'.$connection, $output['total_net_output_bytes']);
     }
 
     /**
@@ -226,10 +225,10 @@ class RedisMonitorRecorder
     protected function setEnabledFeatures(): void
     {
         $this->features = [
-            'memory_usage'   => $this->config->get('redis_metrics.memory_usage', true),
+            'memory_usage' => $this->config->get('redis_metrics.memory_usage', true),
             'key_statistics' => $this->config->get('redis_metrics.key_statistics', true), // Includes TTL
-            'removed_keys'   => $this->config->get('redis_metrics.removed_keys', true),
-            'network_usage'  => $this->config->get('redis_metrics.network_usage', true),
+            'removed_keys' => $this->config->get('redis_metrics.removed_keys', true),
+            'network_usage' => $this->config->get('redis_metrics.network_usage', true),
         ];
     }
 
