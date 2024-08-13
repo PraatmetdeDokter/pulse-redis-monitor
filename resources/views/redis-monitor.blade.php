@@ -252,7 +252,8 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
     labelValue(bytesString) {
-        bytes = parseFloat(bytesString.replace(/\./g, '').replace(',', '.'))
+        bytes = parseFloat(bytesString.replace(/[\.,]/g, '').replace(',', '.'))
+
         if (bytes === 0) {
             return '0 Bytes'
         }
@@ -558,7 +559,8 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
     labelValue(millisecondsString) {
-        milliseconds = parseFloat(millisecondsString.replace(/\./g, '').replace(',', '.'))
+        milliseconds = parseFloat(millisecondsString.replace(/[\.,]/g, '').replace(',', '.'))
+
         if (milliseconds === 0) {
             return '0 milliseconds'
         }
@@ -686,7 +688,8 @@ Alpine.data('redisMonitorNetworkUsageChart', (config) => ({
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
     labelValue(bytesString) {
-        bytes = parseFloat(bytesString.replace(/\./g, '').replace(',', '.'))
+        bytes = parseFloat(bytesString.replace(/[\.,]/g, '').replace(',', '.'))
+
         if (bytes === 0) {
             return '0 Bytes'
         }
