@@ -164,12 +164,14 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
                     datasets: [
                         {
                             label: 'Used memory',
+                            backgroundColor: config.colors['secondary'],
                             borderColor: config.colors['secondary'],
                             data: config.data['used_memory'],
                             order: 0,
                         },
                         {
                             label: 'Max memory',
+                            backgroundColor: config.colors['primary'],
                             borderColor: config.colors['primary'],
                             data: config.data['max_memory'],
                             order: 1,
@@ -216,10 +218,7 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
                             position: 'nearest',
                             intersect: false,
                             callbacks: {
-                                beforeBody: (context) => context
-                                    .map(item => `${item.dataset.label}: ${this.labelValue(item.formattedValue)}`)
-                                    .join(', '),
-                                label: () => null,
+                                label: (context) => this.setLabel(context),
                             },
                         },
                     },
@@ -251,9 +250,10 @@ Alpine.data('redisMonitorMemoryChart', (config) => ({
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
-    labelValue(bytesString) {
-        bytes = parseFloat(bytesString.replace(/[\.,]/g, '').replace(',', '.'))
-
+    setLabel(context) {
+        return `${context.dataset.label}: ${this.labelValue(context.parsed.y)}`
+    },
+    labelValue(bytes) {
         if (bytes === 0) {
             return '0 Bytes'
         }
@@ -278,12 +278,14 @@ Alpine.data('redisMonitorActiveKeysChart', (config) => ({
                     datasets: [
                         {
                             label: 'Keys with exipration',
+                            backgroundColor: config.colors['secondary'],
                             borderColor: config.colors['secondary'],
                             data: config.data['keys_with_expiration'],
                             order: 0,
                         },
                         {
                             label: 'Total keys',
+                            backgroundColor: config.colors['primary'],
                             borderColor: config.colors['primary'],
                             data: config.data['keys_total'],
                             order: 1,
@@ -330,10 +332,7 @@ Alpine.data('redisMonitorActiveKeysChart', (config) => ({
                             position: 'nearest',
                             intersect: false,
                             callbacks: {
-                                beforeBody: (context) => context
-                                    .map(item => `${item.dataset.label}: ${item.formattedValue}`)
-                                    .join(', '),
-                                label: () => null,
+                                label: (context) => this.setLabel(context),
                             },
                         },
                     },
@@ -364,7 +363,10 @@ Alpine.data('redisMonitorActiveKeysChart', (config) => ({
     },
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
-    }
+    },
+    setLabel(context) {
+        return `${context.dataset.label}: ${context.formattedValue}`
+    },
 }))
 
 Alpine.data('redisMonitorRemovedKeysChart', (config) => ({
@@ -378,12 +380,14 @@ Alpine.data('redisMonitorRemovedKeysChart', (config) => ({
                     datasets: [
                         {
                             label: 'Expired keys',
+                            backgroundColor: config.colors['secondary'],
                             borderColor: config.colors['secondary'],
                             data: config.data['expired_keys'],
                             order: 0,
                         },
                         {
                             label: 'Evicted keys',
+                            backgroundColor: config.colors['primary'],
                             borderColor: config.colors['primary'],
                             data: config.data['evicted_keys'],
                             order: 1,
@@ -430,10 +434,7 @@ Alpine.data('redisMonitorRemovedKeysChart', (config) => ({
                             position: 'nearest',
                             intersect: false,
                             callbacks: {
-                                beforeBody: (context) => context
-                                    .map(item => `${item.dataset.label}: ${item.formattedValue}`)
-                                    .join(', '),
-                                label: () => null,
+                                label: (context) => this.setLabel(context),
                             },
                         },
                     },
@@ -464,7 +465,10 @@ Alpine.data('redisMonitorRemovedKeysChart', (config) => ({
     },
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
-    }
+    },
+    setLabel(context) {
+        return `${context.dataset.label}: ${context.formattedValue}`
+    },
 }))
 
 Alpine.data('redisMonitorTtlChart', (config) => ({
@@ -478,6 +482,7 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
                     datasets: [
                         {
                             label: 'Average ttl',
+                            backgroundColor: config.colors['secondary'],
                             borderColor: config.colors['secondary'],
                             data: config.data['avg_ttl'],
                             order: 0,
@@ -524,10 +529,7 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
                             position: 'nearest',
                             intersect: false,
                             callbacks: {
-                                beforeBody: (context) => context
-                                    .map(item => `${item.dataset.label}: ${this.labelValue(item.formattedValue)}`)
-                                    .join(', '),
-                                label: () => null,
+                                label: (context) => this.setLabel(context),
                             },
                         },
                     },
@@ -558,9 +560,10 @@ Alpine.data('redisMonitorTtlChart', (config) => ({
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
-    labelValue(millisecondsString) {
-        milliseconds = parseFloat(millisecondsString.replace(/[\.,]/g, '').replace(',', '.'))
-
+    setLabel(context) {
+        return `${context.dataset.label}: ${this.labelValue(context.parsed.y)}`
+    },
+    labelValue(milliseconds) {
         if (milliseconds === 0) {
             return '0 milliseconds'
         }
@@ -607,6 +610,7 @@ Alpine.data('redisMonitorNetworkUsageChart', (config) => ({
                     datasets: [
                         {
                             label: 'Network usage',
+                            backgroundColor: config.colors['secondary'],
                             borderColor: config.colors['secondary'],
                             data: config.data['redis_network_usage'],
                             order: 0,
@@ -653,10 +657,7 @@ Alpine.data('redisMonitorNetworkUsageChart', (config) => ({
                             position: 'nearest',
                             intersect: false,
                             callbacks: {
-                                beforeBody: (context) => context
-                                    .map(item => `${item.dataset.label}: ${this.labelValue(item.formattedValue)}`)
-                                    .join(', '),
-                                label: () => null,
+                                label: (context) => this.setLabel(context),
                             },
                         },
                     },
@@ -687,9 +688,10 @@ Alpine.data('redisMonitorNetworkUsageChart', (config) => ({
     highest(readings) {
         return Math.max(...Object.values(readings).map(dataset => Math.max(...Object.values(dataset))))
     },
-    labelValue(bytesString) {
-        bytes = parseFloat(bytesString.replace(/[\.,]/g, '').replace(',', '.'))
-
+    setLabel(context) {
+        return `${context.dataset.label}: ${this.labelValue(context.parsed.y)}`
+    },
+    labelValue(bytes) {
         if (bytes === 0) {
             return '0 Bytes'
         }
