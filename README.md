@@ -14,8 +14,8 @@ This card monitors and displays the following Redis metrics:
   - **Keys with expiration:** A count of keys that have a set expiration time.
 
 - **Removed keys:**
-  - **Expired jeys:** The number of keys that have been automatically removed after their TTL has expired.
-  - **Evicted jeys:** The number of keys evicted due to memory constraints when Redis is running out of space.
+  - **Expired keys:** The number of keys that have been automatically removed after their TTL has expired.
+  - **Evicted keys:** The number of keys evicted due to memory constraints when Redis is running out of space.
 
 - **Average TTL:** The average remaining Time to Live (TTL) of keys in Redis.
 
@@ -68,7 +68,7 @@ Next, add the card to your `resources/views/vendor/pulse/dashboard.blade.php`:
 ```
 
 ### Usage
-The recorder uses the [pulse:check](https://laravel.com/docs/11.x/pulse#capturing-entries) command, so make that the command running.
+Don't forget to run the [pulse:check](https://laravel.com/docs/11.x/pulse#capturing-entries) command to start recording.
 
 # Configuration
 To customize the behavior of the Redis Monitor Recorder, you can optionally include `colors` and `metrics` settings in your configuration. You only need to specify the values you want to change from the default settings.
